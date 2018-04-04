@@ -12,7 +12,9 @@ class BaidubaikeItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     title = Field();
-    desc = Field();
+    detail_link = Field();
+    desc_content = Field();
+    label = Field();
 
 class BaidubaikeUrl(Item):
     url_link = Field();
