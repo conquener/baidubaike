@@ -6,6 +6,8 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymssql;
+from baidubaike.items import BaidubaikeItem;
+from baidubaike.items import BaidubaikeUrl;
 
 class BaidubaikePipeline(object):
     collect_name = "huangpeng";
@@ -33,12 +35,7 @@ class BaidubaikePipeline(object):
 
     def process_item(self, item, spider):
         # 插入百科数据 到数据库
-        print(dict(item), '----------------------\n')
-        cursor = self.conn.cursor();
-        cursor.execute(
-            "insert into BAIDUBAIKE_INFOS(TITLE,DETAIL_LINK,DESC_CONTENT,LABEL) values('" + item['title'] + "','" + item[
-                'detail_link'] + "','" + str(item['desc_content']) + "','" + str(item['label']) +"');");
-        self.conn.commit();
+
         return item;
 
 class BaidubaikeUrlPipeline(object):
@@ -65,10 +62,16 @@ class BaidubaikeUrlPipeline(object):
         self.conn.close();
 
     def process_item(self,item,spider):
-        #插入url 到数据库
-        print(dict(item), '----------------------\n')
         cursor = self.conn.cursor();
-        cursor.execute("insert into BAIDUBAIKE_URLS(URL_DESC,URL_LINK,URL_TYPE) values('"+item['url_desc']+"','"+item['url_link']+"',"+str(item['url_type'])+");");
+        sql = "";
+        if isinstance(item,BaidubaikeUrl):
+            #插入url 到数据库
+            sql = "insert into BAIDUBAIKE_URLS(URL_DESC,URL_LINK,URL_TYPE) values(%s,%s,%d);" ;
+            cursor.execute(sql,(item['url_desc'] , item['url_link'] , item['url_type']));
+        elif isinstance(item,BaidubaikeItem):
+            sql = "insert into BAIDUBAIKE_INFOS(TITLE,DETAIL_LINK,DESC_CONTENT,LABEL) values(%s,%s,%s,%s);" ;
+            cursor.execute(sql, (item['title'] , item['detail_link'] , item['desc_content'] , str(item['label'])));
+
         self.conn.commit();
         return item;
 

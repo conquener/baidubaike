@@ -29,7 +29,7 @@ DEFAULT_REQUEST_HEADERS = {
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-
+DEPTH_LIMIT = 100
 DATABASE_URL='localhost'
 DATABASE_NAME='test'
 DATABASE_USER='huangpeng'
@@ -80,8 +80,8 @@ DATABASE_PWD='root1234'
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 ITEM_PIPELINES = {
-    'baidubaike.pipelines.BaidubaikePipeline': 300,
-    'baidubaike.pipelines.BaidubaikeUrlPipeline': 300,
+    # 'baidubaike.pipelines.BaidubaikePipeline': 300,
+    'baidubaike.pipelines.BaidubaikeUrlPipeline': 300
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
